@@ -5,7 +5,7 @@ import main as m
 import os
 
 SIZE = 32
-EPOCHS = 15000
+EPOCHS = 8000
 BATCH = 128
 
 def gradient_penalty(eve, cipher):

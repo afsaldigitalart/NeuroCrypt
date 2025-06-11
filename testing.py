@@ -3,7 +3,7 @@ import main as m
 
 SIZE = 32
 device = torch.device('cuda' if torch.cuda.is_available() else "cpu")
-tests = ["1234 get on the dance floor"]
+tests = ["We are sure that we dont have acess to it!"]
 
 encrypter = m.Encrypter(SIZE)
 decrypter = m.Decrypter(SIZE)
@@ -34,7 +34,6 @@ for text in tests:
         decrypter_outs.append(torch.sigmoid(decrypter_out).squeeze(0).cpu())
         detective_outs.append(torch.sigmoid(detective_out).squeeze(0).cpu())
 
-    encrypter_out = m.bit_to_text(encrypter_out)
     decrypter_decoded = m.bit_to_text(decrypter_outs)
     detective_decoded = m.bit_to_text(detective_outs)
 
