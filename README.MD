@@ -1,4 +1,4 @@
-# Neural Cryptography with Adversarial Training
+# NeuroCrypt - Neural Cryptography with Adversarial Training
 
 This project is a professional simulation of learnable encryption using neural networks, based on the influential 2016 paper *[Learning to Protect Communications with Adversarial Neural Cryptography](https://openreview.net/pdf?id=S1HEBe_Jl)* by Abadi and Andersen. The goal is to explore whether machines can autonomously develop secure communication protocols through adversarial training—without being programmed with specific cryptographic algorithms.
 
