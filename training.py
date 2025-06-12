@@ -4,6 +4,8 @@ import torch.optim as optim
 import main as m
 import matplotlib.pyplot as plt
 import os
+import random
+
 
 SIZE = 64
 EPOCHS = 40000
@@ -44,7 +46,7 @@ for epoch in range(1, EPOCHS+1):
     nonce = torch.randint(0, 2, (BATCH, SIZE)).float().to(device)
 
     cipher_msg = encrypter(msg, key, nonce)
-    cipher_noisy = cipher_msg + torch.randn_like(cipher_msg)*0.03
+    cipher_noisy = cipher_msg + torch.randn_like(cipher_msg)*(0.03 + 0.01 * random.random())
     decrypt_out = decrypter(cipher_noisy, key, nonce)
     detective_out = detective(cipher_noisy.detach())
 
