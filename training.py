@@ -2,10 +2,11 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import main as m
+import matplotlib.pyplot as plt
 import os
 
-SIZE = 32
-EPOCHS = 8000
+SIZE = 64
+EPOCHS = 40000
 BATCH = 128
 
 def gradient_penalty(eve, cipher):
@@ -31,6 +32,11 @@ criterion = nn.BCEWithLogitsLoss()
 lambda_ab_loss = 1.8
 lambda_gp = 10.0
 
+decrypter_loss = []
+detect_loss = []
+decrypter_accuracies = []
+detective_accuracies = []
+
 for epoch in range(1, EPOCHS+1):
 
     msg = torch.randint(0, 2, (BATCH, SIZE)).float().to(device)
@@ -55,9 +61,15 @@ for epoch in range(1, EPOCHS+1):
     (detective_loss + lambda_gp * gp_loss).backward()
     opt_eve.step()
 
+    bob_acc = ((torch.sigmoid(decrypt_out) > 0.45) == msg).float().mean().item()
+    eve_acc = ((torch.sigmoid(detective_out) > 0.45) == msg).float().mean().item()
+
+    decrypter_loss.append(decrypt_loss.item())
+    detect_loss.append(detective_loss.item())
+    decrypter_accuracies.append(bob_acc)
+    detective_accuracies.append(eve_acc)
+
     if epoch % 200 == 0 or epoch == 1:
-        bob_acc = ((torch.sigmoid(decrypt_out) > 0.5) == msg).float().mean().item()
-        eve_acc = ((torch.sigmoid(detective_out) > 0.5) == msg).float().mean().item()
         print(f"Epoch {epoch} | Bob Acc: {bob_acc*100:.2f}% | Eve Acc: {eve_acc*100:.2f}%")
 
 os.makedirs("models", exist_ok=True)
@@ -65,3 +77,24 @@ torch.save(encrypter.state_dict(), "models/encrypter.pth")
 torch.save(decrypter.state_dict(), "models/decrypter.pth")
 torch.save(detective.state_dict(), "models/detective.pth")
 print("Training complete!")
+
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+plt.plot(decrypter_loss, label="Bob Loss")
+plt.plot(detect_loss, label="Eve Loss")
+plt.title("Loss over Epochs")
+plt.xlabel("Epoch")
+plt.ylabel("Loss")
+plt.legend()
+
+plt.subplot(1, 2, 2)
+plt.plot(decrypter_accuracies, label="Bob Accuracy")
+plt.plot(detective_accuracies, label="Eve Accuracy")
+plt.title("Accuracy over Epochs")
+plt.xlabel("Epoch")
+plt.ylabel("Accuracy")
+plt.legend()
+
+plt.tight_layout()
+plt.savefig("training_graph.png")

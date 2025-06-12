@@ -1,10 +1,9 @@
 import torch
 import main as m
 
-SIZE = 32
+SIZE = 64
 device = torch.device('cuda' if torch.cuda.is_available() else "cpu")
-tests = ["We are sure that we dont have acess to it!"]
-
+tests = ["help"]
 encrypter = m.Encrypter(SIZE)
 decrypter = m.Decrypter(SIZE)
 detective = m.Detective(SIZE)
