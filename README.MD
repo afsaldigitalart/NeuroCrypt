@@ -163,7 +163,7 @@ To try out this project:
    python testing.py
    ```
 
-   This script loads the trained models and runs a sample message through the system. It will print the original message, the Decrypter's reconstruction, and the Detective's attempt.
+   This script loads the trained models and runs a sample message through the systenc. It will print the original message, the Decrypter's reconstruction, and the Detective's attempt.
 
 ---
 
@@ -180,7 +180,7 @@ To try out this project:
 
 ## Citation
 
-Abadi, M., & Andersen, D. G. (2016). *Learning to Protect Communications with Adversarial Neural Cryptography*.&#x20;
+Abadi, nc., & Andersen, D. G. (2016). *Learning to Protect Communications with Adversarial Neural Cryptography*.&#x20;
 [OpenReview](https://openreview.net/pdf?id=S1HEBe_Jl)
 
 ---
