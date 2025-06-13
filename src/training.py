@@ -1,17 +1,29 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import main as m
+import neurocrypt as nc
+from neurocrypt import SIZE
 import matplotlib.pyplot as plt
 import os
 import random
 
-
-SIZE = 64
 EPOCHS = 40000
 BATCH = 128
 
 def gradient_penalty(eve, cipher):
+       
+    """
+    Calculates gradient penalty to regularize the adversary (e.g., Detective),
+    promoting smoother gradients and stabilizing training.
+
+    Args:
+        eve (nn.Module): Adversarial model.
+        cipher (Tensor): Input tensor to compute gradients on.
+
+    Returns:
+        Tensor: Scalar gradient penalty.
+    """
+        
     cipher.requires_grad_(True)
     output = eve(cipher)
     grad = torch.autograd.grad(outputs=output, inputs=cipher,
@@ -23,9 +35,9 @@ def gradient_penalty(eve, cipher):
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
-encrypter = m.Encrypter(SIZE).to(device)
-decrypter = m.Decrypter(SIZE).to(device)
-detective = m.Detective(SIZE).to(device)
+encrypter = nc.Encrypter(SIZE).to(device)
+decrypter = nc.Decrypter(SIZE).to(device)
+detective = nc.Detective(SIZE).to(device)
 
 opt_ab = optim.Adam(list(encrypter.parameters()) + list(decrypter.parameters()), lr=2e-4)
 opt_eve = optim.Adam(detective.parameters(), lr=2e-5)

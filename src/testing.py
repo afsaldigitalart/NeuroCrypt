@@ -1,11 +1,11 @@
 import torch
-import main as m
+import neurocrypt as nc
+from neurocrypt import SIZE
 
-SIZE = 64
 device = torch.device('cuda' if torch.cuda.is_available() else "cpu")
-encrypter = m.Encrypter(SIZE)
-decrypter = m.Decrypter(SIZE)
-detective = m.Detective(SIZE)
+encrypter = nc.Encrypter(SIZE)
+decrypter = nc.Decrypter(SIZE)
+detective = nc.Detective(SIZE)
 
 encrypter.load_state_dict(torch.load(r"models\encrypter.pth", map_location=device))
 decrypter.load_state_dict(torch.load(r"models\decrypter.pth", map_location=device))
@@ -18,7 +18,7 @@ detective.eval()
 text = input("Enter a Dummy Text: ")
 
 print(f"\nTesting: {text}")
-chunks = m.text_to_bit(text, SIZE)
+chunks = nc.text_to_bit(text, SIZE)
 decrypter_outs, detective_outs = [], []
 key = torch.randint(0, 2, (1, SIZE)).float().to(device)
 nonce = torch.randint(0, 2, (1, SIZE)).float().to(device)
@@ -33,8 +33,8 @@ for chunk in chunks:
     decrypter_outs.append(torch.sigmoid(decrypter_out).squeeze(0).cpu())
     detective_outs.append(torch.sigmoid(detective_out).squeeze(0).cpu())
 
-decrypter_decoded = m.bit_to_text(decrypter_outs)
-detective_decoded = m.bit_to_text(detective_outs)
+decrypter_decoded = nc.bit_to_text(decrypter_outs)
+detective_decoded = nc.bit_to_text(detective_outs)
 
 print(f"Decrypter: {decrypter_decoded}")
 print(f"Detective: {detective_decoded}")
